@@ -3,15 +3,15 @@ source("inputs_ag.R",keep.source = TRUE)
 library(DescTools)
 #Ingresando las unidades por item y calculando los valores
 
-Cultivos<-c("Platano","Papa", "Maiz","Yuca","Cafe","Arroz")
+Cultivos<-c("Platano_est","Platano_sos","Maiz","Papa","Cafe_est","Cafe_sos","Yuca","Arroz","Cacao_est","Cacao_sos","Cana","Banano_est","Banano_sos","Caucho_est",
+            "Caucho-sos","Cebolla","Palma_est","palma_sos","Tomate","Aguacate_est","Aguacate-est")
 Departamentos<-c("Caqueta","Narino","Putumayo","Cauca","Bolivar","Cordoba","Magdalena","Sucre","Atlantico","Guajira","Cesar","Santander","N de Santander","Tolima","Huila","Caldas","Quindio","Risaralda","Meta","Casanare","Vichada","Arauca","Boyaca","Cundinamarca","Antioquia","Valle del Cauca","Amazonas","Choco","San Andres","Guaviare","Vaupes","Guainia")
-units<-read.csv("../costos database/Units.csv", h=T)
-Units<-import_list("C:/Users/hac809/Desktop/FAO/costos database/Tabla_costos_unid.xlsx")
+Units<-import_list("tabla_de_costos.xlsx")
 for(i in 1:length(Units)){Units[[i]][,2]<-as.numeric(Units[[i]][,2])}
 Jornal<-insumos[[3]][[3]][,c(2,5,7)]
 Jornal<-subset(Jornal,Jornal[2]=="Jornal agrícola, sin alimentación")
-Valor<-units[c(1,2)];names(Valor)[2]<-"Valor"
-Valor[2]<-NA
+Valor<-Units[[1]][c(1,2)];names(Valor)[2]<-"Valor";Valor[2]<-NA
+
 for (i in 1:nrow(Valor)){
   temp<-subset(Jornal,Jornal[1]==as.character(Valor$Departamento[i]))
   av<-mean(as.numeric(temp[,3]))
@@ -125,3 +125,7 @@ Val3[[i]][,j]<-ifelse(is.na(Val3[[i]][,j]), mean((Val3[[i]][,j]),na.rm=TRUE),Val
 Units[[i]][,j]<-ifelse(is.na(Units[[i]][,j]), mean((Units[[i]][,j]),na.rm=TRUE),Units[[i]][,j])
   }}
 
+#Fuentes 
+#1. https://www.ica.gov.co/getattachment/Areas/Agricola/Servicios/Regulacion-y-Control-de-Plaguicidas-Quimicos/Estadisticas/ESTADISTICAS-PLAGUICIDAS-2019-1.pdf.aspx?lang=es-CO
+#2. https://www.ica.gov.co/getdoc/d3612ebf-a5a6-4702-8d4b-8427c1cdaeb1/registros-nacionales-pqua-15-04-09.aspx
+#3. https://www.dane.gov.co/index.php/estadisticas-por-tema/agropecuario/sistema-de-informacion-de-precios-sipsa/componente-insumos-1/componente-insumos-historicos
