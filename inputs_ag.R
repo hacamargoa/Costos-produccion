@@ -48,6 +48,7 @@ for (i in 1:length(insumos[[j]])){
   insumos[[j]][[i]]<-temp
   }
 }
+
 ##Insumos agricolas
 data_list_ag<-insumos[[1]]
 for (i in 1:length(data_list_ag)){
