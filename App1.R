@@ -1,3 +1,4 @@
+library(ggplot2)
 library(shiny)
 library(shinythemes)
 library(colmaps)
@@ -42,6 +43,19 @@ navbarPage(
            mainPanel(
              h3("Costos de Producción Agrícola"),
              plotOutput("Map", width = "auto", height=800)
+           )
+  ),
+  tabPanel("Mapas Pecuarios",
+           sidebarPanel(
+             tags$h3("Seleccione:"),
+             selectInput("txt1pmap", "Producto:", sort(Lineas)),
+             selectInput("txt2pmap", "Item:", names(costosP)),
+             downloadButton(outputId = "downloaderMP", label = "Download Map")
+             
+           ),
+           mainPanel(
+             h3("Costos de Producción Pecuaria"),
+             plotOutput("MapP", width = "auto", height=800)
            )
   )
 ))
@@ -108,24 +122,24 @@ tabla<- function (input, output){
     }
     
      CosPec<- reactive({
-        DataV<-DeptosV[[input$txt1pec]][[input$txt2pec]]
-        DataV<-as.data.frame(lapply(DataV,function(x)if(is.numeric(x))as.integer(x) else x))
-        sumrowV <- data.frame(matrix("",nrow=1,ncol=5));names(sumrowV)=names(DataV)
-        subMoV=sumrowV
-        subMoV[5]<-sum(DataV[c(2:4),5])
-        subMoV[1]<-"MANO DE OBRA"
-        subInsV=sumrowV
-        subInsV[5]<-sum(DataV[c(5:11),5])
-        subInsV[1]<-"INSUMOS"
-        subOtrV=sumrowV
-        subOtrV[5]<-sum(DataV[c(12:17),5])
-        subOtrV[1]<-"OTROS"
-        subFijV=sumrowV
-        subFijV[5]<-sum(DataV[c(18,19),5])
-        subFijV[1]<-"COSTOS FIJOS"
-        sumrowV[5]<-sum(subMoV[5],subInsV[5],subOtrV[5],subFijV[5])
-        sumrowV[1]<-"COSTOS TOTALES"
-        Data1V<-rbind(DataV[c(1:4),],subMoV,DataV[c(5:11),],subInsV,DataV[c(12:17),],subOtrV,DataV[c(18,19),],subFijV,sumrowV)
+       DataV<-DeptosV[[input$txt1pec]][[input$txt2pec]]
+       DataV<-as.data.frame(lapply(DataV,function(x)if(is.numeric(x))as.integer(x) else x))
+       sumrowV <- data.frame(matrix("",nrow=1,ncol=5));names(sumrowV)=names(DataV)
+       subMoV=sumrowV
+       subMoV[5]<-sum(DataV[c(2:4),5])
+       subMoV[1]<-"MANO DE OBRA"
+       subInsV=sumrowV
+       subInsV[5]<-sum(DataV[c(5:14),5])
+       subInsV[1]<-"INSUMOS"
+       subOtrV=sumrowV
+       subOtrV[5]<-sum(DataV[c(15:19),5])
+       subOtrV[1]<-"OTROS"
+       subFijV=sumrowV
+       subFijV[5]<-sum(DataV[c(20,22),5])
+       subFijV[1]<-"COSTOS FIJOS"
+       sumrowV[5]<-sum(DataV[1,5],subMoV[1,5],subInsV[1,5],subOtrV[1,5],subFijV[1,5])
+       sumrowV[1]<-"COSTOS TOTALES"
+       Data1V<-rbind(DataV[c(1:4),],subMoV,DataV[c(5:14),],subInsV,DataV[c(15:19),],subOtrV,DataV[c(20,22),],subFijV,sumrowV)
                          })
      
     output$costosPec <- function(){
@@ -136,17 +150,17 @@ tabla<- function (input, output){
       subMoV[5]<-sum(DataV[c(2:4),5])
       subMoV[1]<-"MANO DE OBRA"
       subInsV=sumrowV
-      subInsV[5]<-sum(DataV[c(5:11),5])
+      subInsV[5]<-sum(DataV[c(5:14),5])
       subInsV[1]<-"INSUMOS"
       subOtrV=sumrowV
-      subOtrV[5]<-sum(DataV[c(12:17),5])
+      subOtrV[5]<-sum(DataV[c(15:19),5])
       subOtrV[1]<-"OTROS"
       subFijV=sumrowV
-      subFijV[5]<-sum(DataV[c(18,19),5])
+      subFijV[5]<-sum(DataV[c(20,22),5])
       subFijV[1]<-"COSTOS FIJOS"
-      sumrowV[5]<-sum(subMoV[5],subInsV[5],subOtrV[5],subFijV[5])
+      sumrowV[5]<-sum(DataV[1,5],subMoV[1,5],subInsV[1,5],subOtrV[1,5],subFijV[1,5])
       sumrowV[1]<-"COSTOS TOTALES"
-      Data1V<-rbind(DataV[c(1:4),],subMoV,DataV[c(5:11),],subInsV,DataV[c(12:17),],subOtrV,DataV[c(18,19),],subFijV,sumrowV)
+      Data1V<-rbind(DataV[c(1:4),],subMoV,DataV[c(5:14),],subInsV,DataV[c(15:19),],subOtrV,DataV[c(20,22),],subFijV,sumrowV)
       kable(Data1V, row.names = FALSE,caption = paste0("Costos de Produccion para ",input$txt2pec," en ",input$txt1pec), booktabs = TRUE) %>%
         kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
         row_spec(24, bold = T,italic=T) %>% # format last row
@@ -159,16 +173,25 @@ tabla<- function (input, output){
           }
     
     CosMap<-function(){
-      # colmap(departamentos, data = ifelse(input$txt2map=="Costos Mano de Obra",costos[[2]],
-      #                                     ifelse(input$txt2map=="Costos Insumos",costos[[3]],
-      #                                            ifelse(input$txt2map=="Costos Otros",costos[[4]],
-      #                                                   ifelse(input$txt2map=="Costos Variables", costos[[6]],
-      #                                                          ifelse(input$txt2map=="Costos Fijos",costos[[5]], costos[[1]]))))), data_id = "id_depto",var=input$txt1map)
-      colmap(departamentos, data = costos[[input$txt2map]], data_id = "id_depto",var=input$txt1map)
-      
-     }
+        colmap(departamentos, data = costos[[input$txt2map]], data_id = "id_depto",var=input$txt1map)+
+        scale_fill_continuous(low = "#bcbddc", high = "#3f007d", na.value = "wheat")+
+        ggtitle(paste(input$txt2map, "de ", input$txt1map))+
+        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"))
+    }
+    
     output$Map <- renderPlot({
       CosMap()
+    })
+    
+    CosMapP<-function(){
+      colmap(departamentos, data = costosP[[input$txt2pmap]], data_id = "id_depto",var=input$txt1pmap)+
+        scale_fill_continuous(low = "#bcbddc", high = "#3f007d", na.value = "wheat")+
+        ggtitle(paste(input$txt2pmap, "de ", input$txt1pmap))+
+        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"))
+    }
+    
+    output$MapP <- renderPlot({
+      CosMapP()
     })
     
     output$downloaderA <- downloadHandler(
@@ -187,6 +210,13 @@ tabla<- function (input, output){
       content =function(file){
         png(file)
         print(CosMap())
+        dev.off()
+      })
+    output$downloaderMP <- downloadHandler(
+      filename =function(){paste("Mapa", input$txt2pmap, "de ", input$txt1pmap, ".png",sep="")},
+      content =function(file){
+        png(file)
+        print(CosMapP())
         dev.off()
       })
    

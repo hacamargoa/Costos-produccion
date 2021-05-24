@@ -2,6 +2,7 @@ source('C:/Users/hac809/Desktop/FAO/Costos-produccion/Tablas_agricola.R', encodi
 
 library(knitr)
 library(kableExtra)
+#compilación de tablas de costos por departamento y linea productiva en la lista Deptos
 Tabla_costos_ag<-read.csv("Tabla_costos.csv", h=T)
 Arriendos<-read.csv("Arriendos.csv", h=T)
 Maquina<-read.csv("Maquina.csv", h=T)
@@ -27,7 +28,7 @@ for(j in Departamentos){
     }
   Deptos[[j]]<-Cultiv;names(Deptos[[j]])<-Cultivos
 }
-
+#Calculo de tablas de costos para la creacion de mapas
 cost<-data.frame(matrix(NA,nrow=32,ncol=length(Cultivos)))
 codesDepto<-read.csv("codedepto.csv",h=T)
 codesDepto$id_depto<-sprintf("%02d",codesDepto$id_depto)

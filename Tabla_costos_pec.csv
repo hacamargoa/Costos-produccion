@@ -1,22 +1,23 @@
-ACTIVIDADES,UNIDAD,Cantidad,Valor_Uni,Costo,
-Semovientes/Alevinos,Unidad,,,,1
-Mant. Pastura/instalaciones,Jornal,,,,2
-Alimento y mant. Animales,Jornal,,,,3
-Ordeno/Sacrificio/Pesca,Jornal,,,,4
-Fertilizante/Cal,kg,,,,5
-Insecticida,lt,,,,6
-Herbicida,lt,,,,7
-Semilla,kg,,,,8
-Sal mineralizada/Melaza,kg,,,,9
-Hormonas,cm3,,,,10
-Medicamentos,Dosis,,,,11
-Vacunas,Dosis,,,,12
-Vitaminas y Suplementos,Dosis,,,,13
-Mecanizacion,Global,,,,14
-Materiales mant. animales,Global,,,,15
-Materiales pastura/instalaciones,Global,,,,16
-Materiales ordeno/sacrificio,Global,,,,17
-Transporte,Global,,,,18
-"Adecuaciones, instalaciones",Global,,,,19
-Arriendo,Global,,,,20
-Imprevistos,Global,,,,21
+ACTIVIDADES,UNIDAD,Cantidad,Valor_Uni,Costo
+Semovientes/Alevinos,Unidad,,,
+Mant. Pastura/instalaciones,Jornal,,,
+Alimento y mant. Animales,Jornal,,,
+Ordeno/Sacrificio/Pesca,Jornal,,,
+Fertilizante/Cal,kg,,,
+Insecticida,lt,,,
+Herbicida,lt,,,
+Semilla,kg,,,
+Sal mineralizada/Melaza,kg,,,
+Hormonas,cm3,,,
+Medicamentos,Dosis,,,
+Vacunas,Dosis,,,
+Vitaminas y Suplementos,Dosis,,,
+Alimento,kg,,,
+Mecanizacion,Global,,,
+Materiales mant animales,Global,,,
+Materiales pastura/instalaciones,Global,,,
+Materiales ordeno/sacrificio,Global,,,
+Transporte,Global,,,
+"Adecuaciones, instalaciones",Global,,,
+Arriendo,Global,,,
+Imprevistos,Global,,,

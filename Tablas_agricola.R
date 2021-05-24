@@ -1,7 +1,7 @@
-source('C:/Users/hac809/Desktop/FAO/Costos-produccion/inputs_ag.R',
-       encoding = 'UTF-8')
+source('C:/Users/hac809/Desktop/FAO/Costos-produccion/inputs_ag.R', encoding = 'UTF-8')
 library(DescTools)
-#Ingresando las unidades por item y calculando los valores
+
+#Ingreso las unidades por item y calculo de los valores de acuerdo a SIPSA
 Units <- import_list("tabla_de_costos.xlsx")
 Cultivos <- colnames(Units[[1]][, -1])
 Departamentos <-Units[[1]][,1]
@@ -73,7 +73,10 @@ for (i in 1:nrow(ValorC)) {
   ValorC$Valor[i] <- av
 }
 Val <- list(Valor, ValorE, ValorFe, ValorF, ValorC)
-#Fungicidas, Herbicidas, Insecticidas
+
+#Fungicidas, Herbicidas, Insecticidas incluyen solo productos reportados ante el ICA para la líinea productiva
+#El costo se estimao como promedio poderado segun las ventas de ingredientes activos en Colombia
+#Fungicidas
 ValorFU <- list()
 Cult2 <- sapply(strsplit(Cultivos, "_"), "[[", 1)
 for (i in 1:length(Cult2)) {
@@ -121,7 +124,7 @@ for (i in 1:length(Cult2)) {
 ValorFu <-
   join_all(ValorFU, by = "Departamento")
 colnames(ValorFu) <- c("Departamento", Cultivos)
-
+#Herbicidas
 ValorHE <- list()
 for (i in 1:length(Cult2)) {
   Herbi <-
@@ -166,7 +169,7 @@ for (i in 1:length(Cult2)) {
 ValorHe <-
   join_all(ValorHE, by = "Departamento")
 colnames(ValorHe) <- c("Departamento", Cultivos)
-
+#insecticidas
 ValorIN <- list()
 for (i in 1:length(Cult2)) {
   Insect <-
@@ -217,6 +220,8 @@ ValorIn <-
   join_all(ValorIN, by = "Departamento")
 colnames(ValorIn) <- c("Departamento", Cultivos)
 
+#Creacion de una lista con toda la información de valores creada además estimación de los departamentos sin datos
+#como promedio de los departamentos con información
 for (i in 1:length(Val)) {
   Val[[i]] <- cbind(Val[[i]][1], rep(Val[[i]][2], times = length(Cultivos)))
   colnames(Val[[i]]) <- c("Departamento", Cultivos)
