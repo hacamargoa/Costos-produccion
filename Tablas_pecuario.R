@@ -1,4 +1,4 @@
-source('C:/Users/hac809/Desktop/FAO/Costos-produccion/inputs_pec.R', encoding = 'UTF-8')
+source('inputs_pec.R', encoding = 'UTF-8')
 
 #Ingreso de las unidades por item y calculo de los valores
 UnitsV<-import_list("tabla_de_costos_pec.xlsx")

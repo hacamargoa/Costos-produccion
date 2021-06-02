@@ -1,4 +1,4 @@
-source('C:/Users/hac809/Desktop/FAO/Costos-produccion/Tablas_agricola.R', encoding = 'UTF-8')
+source('Tablas_agricola.R', encoding = 'UTF-8')
 
 library(knitr)
 library(kableExtra)

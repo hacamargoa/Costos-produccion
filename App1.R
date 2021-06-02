@@ -3,7 +3,7 @@ library(shiny)
 library(shinythemes)
 library(colmaps)
 library(data.table)
-source('C:/Users/hac809/Desktop/FAO/Costos-produccion/Costos_Pec.R', encoding = 'UTF-8')
+source('Costos_Pec.R', encoding = 'UTF-8')
 
 preguntas<-fluidPage(theme=shinytheme("superhero"),
 navbarPage(
