@@ -17,8 +17,10 @@ Pecuario
 -Tablas_pecuario.R: Calculo de los valores para insumos y jornales por linea por departamento basado en los inputs. Precios de enmiendas, insecticidas, herbicidas, especies animales fueron calculados por departamento. Mientras que insumos como alimento, vacunas, medicinas, vitaminas tambien son filtrados por linea productiva.
 -Costos_Pec: Estima las tablas de costos por departamento y línea productiva y las almacena en la lista DeptosV.
 
+La forma mas rapida de obtener una interfase facil es corriendo el scropt App1.R alli se puede visualizar toda la información y mapas
+
 Paquetes:
-Se deben tener instalados los paquetes: usar el comando install.packages("nombre del paquete"
+Se deben tener instalados los paquetes: usar el comando install.packages("nombre del paquete") 
 rio
 plyr
 dplyr
@@ -34,3 +36,5 @@ data.table
 Tambien es necesario instalar colmaps con el siguiente codigo;
 # install.packages("devtools")
 devtools::install_github("nebulae-co/colmaps")
+
+se puede correr el script Packages.R si es la primera vez que se usa la herramienta

@@ -1,4 +1,4 @@
-source('C:/Users/hac809/Desktop/FAO/Costos-produccion/Costos_ag.R', encoding = 'UTF-8')
+source('Costos_ag.R', encoding = 'UTF-8')
 library(plyr)
 library(stringi)
 

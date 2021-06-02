@@ -1,4 +1,4 @@
-source('C:/Users/hac809/Desktop/FAO/Costos-produccion/inputs_ag.R', encoding = 'UTF-8')
+source('inputs_ag.R', encoding = 'UTF-8')
 library(DescTools)
 
 #Ingreso las unidades por item y calculo de los valores de acuerdo a SIPSA

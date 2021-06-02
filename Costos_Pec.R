@@ -1,4 +1,4 @@
-source('C:/Users/hac809/Desktop/FAO/Costos-produccion/Tablas_pecuario.R', encoding = 'UTF-8')
+source('Tablas_pecuario.R', encoding = 'UTF-8')
 #compilación de tablas de costos por departamento y linea productiva en la lista DeptosV
 transportes<-c(40000,300000,20000,200,200,20000,20000)
 Tabla_costos_pec<-read.csv("Tabla_costos_pec.csv", h=T)
