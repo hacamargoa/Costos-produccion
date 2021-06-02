@@ -1,6 +1,6 @@
 source('C:/Users/hac809/Desktop/FAO/Costos-produccion/Tablas_pecuario.R', encoding = 'UTF-8')
 #compilación de tablas de costos por departamento y linea productiva en la lista DeptosV
-transportes<-c(40000,300000,20000,200,200000,20000,20000)
+transportes<-c(40000,300000,20000,200,200,20000,20000)
 Tabla_costos_pec<-read.csv("Tabla_costos_pec.csv", h=T)
 DeptosV<-list()
 for(j in Departamentos){
@@ -14,7 +14,7 @@ for(j in Departamentos){
     temp[c(16:22),3]<-1
     temp[16,4]<-ifelse(i==1|i==7,60000,0)
     temp[17,4]<-ifelse(i==1|i==7,60000,0)
-    temp[18,4]<-ifelse(i==1|i==7|i==4,0,50000)
+    temp[18,4]<-ifelse(i==1|i==6|i==7,0,ifelse(i==4|i==5,200,ifelse(i==3,20000,50000)))
     temp[19,4]<-transportes[i]
     temp[20,4]<-ifelse(i==1|i==2,2000000/100,0)
     temp[21,4]<-ifelse(i==1|i==2,Arriendos[Arriendos$Departamento==j,2]/10,0)
