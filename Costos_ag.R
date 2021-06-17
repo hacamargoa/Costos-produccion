@@ -19,7 +19,8 @@ for(j in Departamentos){
     
     temp[18,3]<-sum(temp[9,3],temp[10,3])/50;temp[18,4]<-4000
     temp[22,3]<-1;temp[22,4]=Arriendos[Arriendos$Departamento==j,2]
-    temp[16,3]<-6;temp[16,4]<-Maquina[Maquina$Departamento==j,2]
+    temp[16,3]<-ifelse(i %in% c(2,6,10,13,15,18,21,23,24),0,5)
+    temp[16,4]<-Maquina[Maquina$Departamento==j,2]
     temp[20,3]<-1;temp[20,c(4)]<-500000
     temp$Costo<-as.numeric(temp$CANTIDAD)*as.numeric(temp$Valor_Uni)
     temp[19,3]<-1;temp[19,c(4,5)]<-sum(temp[,5])*0.06;temp[21,3]<-1;temp[21,c(4,5)]<-sum(temp[,5])*0.06
@@ -51,6 +52,9 @@ for(i in Departamentos){
 }}
 
 costos<-list(Cost_total,Cost_MO,Cost_insum,Cost_otros,Cost_fijos,Cost_variables)
+for (i in 1:length(costos)){
+  costos[[i]][costos[[i]] == 0] <-NA
+}
 names(costos)<-c("Costos Totales","Costos Mano de Obra","Costos Insumos","Costos Otros", "Costos Fijos","Costos Variables")
 for (i in 1:length(costos)){
 costos[[i]]<-setDT(costos[[i]], keep.rownames = TRUE)[];names(costos[[i]])[1]<-"depto"

@@ -1,19 +1,23 @@
 library(ggplot2)
 library(shiny)
 library(shinythemes)
+library(shinyWidgets)
 library(colmaps)
 library(data.table)
 source('Costos_Pec.R', encoding = 'UTF-8')
 
-preguntas<-fluidPage(theme=shinytheme("superhero"),
+preguntas<-fluidPage(
+  #setBackgroundImage(src = "FAO.jpg", shinydashboard = FALSE),
+  theme=shinytheme("superhero"),
 navbarPage(
   "Costos de Produccion",
+  #tags$img(src = "FAO1.jpg", height ='40', width ='40'),
   tabPanel("Costos agricolas",
            sidebarPanel(
              tags$h3("Seleccione:"),
              selectInput("txt1", "Departamento:", sort(Departamentos)),
              selectInput("txt2", "Linea:", sort(Cultivos)),
-             downloadButton(outputId = "downloaderA", label = "Download")
+             downloadButton(outputId = "downloaderA", label = "Download"),
              ),
            mainPanel(
              h3("Costos de Producción Agrícola"),
@@ -174,9 +178,13 @@ tabla<- function (input, output){
     
     CosMap<-function(){
         colmap(departamentos, data = costos[[input$txt2map]], data_id = "id_depto",var=input$txt1map)+
-        scale_fill_continuous(low = "#bcbddc", high = "#3f007d", na.value = "wheat")+
-        ggtitle(paste(input$txt2map, "de ", input$txt1map))+
-        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"))
+        scale_fill_distiller(palette ="YlOrRd", trans = "reverse", na.value = "snow3",name = "Miles de Pesos", 
+                              labels = scales::unit_format(unit = "",scale = 1e-3)) +
+        ggtitle(paste(input$txt2map, "de ", input$txt1map))+guides(fill = guide_legend(reverse = TRUE))+
+        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"),legend.title = element_text(hjust = 0.5, size =20, face ="bold"), 
+              legend.background = element_rect(fill = "transparent", color = "black"),legend.text = element_text(hjust = 0.5, size =15),
+              legend.margin = margin(0.5, 1, 1, 1, "cm"),legend.key.size = unit(2, "lines"))
+        
     }
     
     output$Map <- renderPlot({
@@ -185,9 +193,13 @@ tabla<- function (input, output){
     
     CosMapP<-function(){
       colmap(departamentos, data = costosP[[input$txt2pmap]], data_id = "id_depto",var=input$txt1pmap)+
-        scale_fill_continuous(low = "#bcbddc", high = "#3f007d", na.value = "wheat")+
-        ggtitle(paste(input$txt2pmap, "de ", input$txt1pmap))+
-        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"))
+        scale_fill_distiller(palette ="YlOrRd", trans = "reverse", na.value = "snow3",name = "Miles de Pesos", 
+                              labels = scales::unit_format(unit = "",scale = 1e-3)) +
+        ggtitle(paste(input$txt2pmap, "de ", input$txt1pmap))+guides(fill = guide_legend(reverse = TRUE))+
+        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"),legend.title = element_text(hjust = 0.5, size =20, face ="bold"), 
+              legend.background = element_rect(fill = "white", color = "black"),legend.text = element_text(hjust = 0.5, size =15),
+              legend.margin = margin(0.5, 1, 1, 1, "cm"),legend.key.size = unit(2, "lines"))
+      
     }
     
     output$MapP <- renderPlot({
