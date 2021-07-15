@@ -7,29 +7,41 @@ library(data.table)
 source('Costos_Pec.R', encoding = 'UTF-8')
 
 preguntas<-fluidPage(
-  #setBackgroundImage(src = "FAO.jpg", shinydashboard = FALSE),
-  theme=shinytheme("superhero"),
-navbarPage(
-  "Costos de Produccion",
-  #tags$img(src = "FAO1.jpg", height ='40', width ='40'),
-  tabPanel("Costos agricolas",
+  setBackgroundImage(
+    src = "Bkg_2.jpg"
+  ),
+  theme=shinytheme("simplex"),
+  titlePanel(windowTitle = "Costos de Producción",
+             title=div(img(src="FAO.jpg", height = 80),"Costos de Producción")
+  ),
+  navbarPage("", 
+    tabPanel("Costos Agricolas",
            sidebarPanel(
              tags$h3("Seleccione:"),
              selectInput("txt1", "Departamento:", sort(Departamentos)),
              selectInput("txt2", "Linea:", sort(Cultivos)),
-             downloadButton(outputId = "downloaderA", label = "Download"),
+             downloadButton(outputId = "downloaderA", label = "Download csv"),
+             downloadButton(outputId = "downloaderA2", label = "Download pdf"),
+             div(style="height:50px;;",HTML("<br()>")),
+             tags$img(src = "ECHO.png", height = 80),
+             tags$img(src = "MINAGRICULTURA.png", height = 80)
              ),
+           
            mainPanel(
              h3("Costos de Producción Agrícola"),
              tableOutput("costosAg")
            )
            ),
-  tabPanel("Costos pecuarios",
+  tabPanel("Costos Pecuarios",
            sidebarPanel(
              tags$h3("Seleccione:"),
              selectInput("txt1pec", "Departamento:", sort(Departamentos)),
              selectInput("txt2pec", "Linea:", sort(Lineas)),
-             downloadButton(outputId = "downloaderP", label = "Download")
+             downloadButton(outputId = "downloaderP", label = "Download csv"),
+             downloadButton(outputId = "downloaderP2", label = "Download pdf"),
+             div(style="height:50px;;",HTML("<br()>")),
+             tags$img(src = "ECHO.png", height = 80),
+             tags$img(src = "MINAGRICULTURA.png", height = 80)
            ),
            mainPanel(
              h3("Costos de Producción Pecuaria"),
@@ -41,7 +53,10 @@ navbarPage(
              tags$h3("Seleccione:"),
              selectInput("txt1map", "Cultivo:", sort(Cultivos)),
              selectInput("txt2map", "Item:", names(costos)),
-             downloadButton(outputId = "downloaderM", label = "Download Map")
+             downloadButton(outputId = "downloaderM", label = "Download Map"),
+             div(style="height:50px;;",HTML("<br()>")),
+             tags$img(src = "ECHO.png", height = 80),
+             tags$img(src = "MINAGRICULTURA.png", height = 80)
              
            ),
            mainPanel(
@@ -54,7 +69,10 @@ navbarPage(
              tags$h3("Seleccione:"),
              selectInput("txt1pmap", "Producto:", sort(Lineas)),
              selectInput("txt2pmap", "Item:", names(costosP)),
-             downloadButton(outputId = "downloaderMP", label = "Download Map")
+             downloadButton(outputId = "downloaderMP", label = "Download Map"),
+             div(style="height:50px;;",HTML("<br()>")),
+             tags$img(src = "ECHO.png", height = 80),
+             tags$img(src = "MINAGRICULTURA.png", height = 80)
              
            ),
            mainPanel(
@@ -62,7 +80,8 @@ navbarPage(
              plotOutput("MapP", width = "auto", height=800)
            )
   )
-))
+)
+)
 
 tabla<- function (input, output){
   
@@ -211,12 +230,28 @@ tabla<- function (input, output){
       content =function(file){
         write.csv(CosAg(), file,row.names = FALSE)
       })
+    output$downloaderA2 <- downloadHandler(
+      filename =function(){paste("Costos_", input$txt2, "_en_", input$txt1, ".pdf",sep="")},
+      content =function(file){
+        pdf(file,onefile=TRUE,height=11,width=9)
+        grid.table(CosAg(),row=NULL)
+        dev.off()
+      })
     
     output$downloaderP <- downloadHandler(
         filename =function(){paste("Costos_", input$txt2pec, "_en_", input$txt1pec, ".csv",sep="")},
         content =function(file){
           write.csv(CosPec(), file,row.names = FALSE)
         })
+    
+    output$downloaderP2 <- downloadHandler(
+      filename =function(){paste("Costos_", input$txt2pec, "_en_", input$txt1pec, ".pdf",sep="")},
+      content =function(file){
+        pdf(file,onefile=TRUE,height=11,width=9)
+        grid.table(CosPec(),row=NULL)
+        dev.off()
+      })
+    
     output$downloaderM <- downloadHandler(
       filename =function(){paste("Mapa", input$txt2map, "de ", input$txt1map, ".png",sep="")},
       content =function(file){
