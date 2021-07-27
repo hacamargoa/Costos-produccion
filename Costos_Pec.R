@@ -1,7 +1,7 @@
 source('Tablas_pecuario.R', encoding = 'UTF-8')
 #compilación de tablas de costos por departamento y linea productiva en la lista DeptosV
 transportes<-c(40000,300000,20000,200,200,200000,20000)
-Tabla_costos_pec<-read.csv("Tabla_costos_pec.csv", h=T)
+Tabla_costos_pec<-read.csv("Tabla_costos_pec.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
 DeptosV<-list()
 for(j in Departamentos){
   Line<-list()
@@ -28,7 +28,7 @@ for(j in Departamentos){
 
 #Calculo de tablas de costos para la creacion de mapas
 costP<-data.frame(matrix(NA,nrow=32,ncol=length(Lineas)))
-codesDepto<-read.csv("codedepto.csv",h=T)
+codesDepto<-read.csv("codedepto.csv",h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
 codesDepto$id_depto<-sprintf("%02d",codesDepto$id_depto)
 colnames(costP)<-Lineas;rownames(costP)<-c(Departamentos)
 Cost_totalP<-costP

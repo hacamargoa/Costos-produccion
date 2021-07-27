@@ -3,9 +3,9 @@ source('Tablas_agricola.R', encoding = 'UTF-8')
 library(knitr)
 library(kableExtra)
 #compilación de tablas de costos por departamento y linea productiva en la lista Deptos
-Tabla_costos_ag<-read.csv("Tabla_costos.csv", h=T)
-Arriendos<-read.csv("Arriendos.csv", h=T)
-Maquina<-read.csv("Maquina.csv", h=T)
+Tabla_costos_ag<-read.csv("Tabla_costos.csv", h=T,stringsAsFactors=FALSE, fileEncoding="latin1")
+Arriendos<-read.csv("Arriendos.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
+Maquina<-read.csv("Maquina.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
 Perc_propag<-c(0.224,0,0.064,0.054,0.200,0,0.111,0.176,0.175,0,0.186,0.168,0,0.2,0,0.075,0.205,0,0.16,0.102,0,0.31,0,0,0.2,0.20,0.14,0.09)
 Deptos<-list()
 for(j in Departamentos){
@@ -31,7 +31,7 @@ for(j in Departamentos){
 }
 #Calculo de tablas de costos para la creacion de mapas
 cost<-data.frame(matrix(NA,nrow=32,ncol=length(Cultivos)))
-codesDepto<-read.csv("codedepto.csv",h=T)
+codesDepto<-read.csv("codedepto.csv",h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
 codesDepto$id_depto<-sprintf("%02d",codesDepto$id_depto)
 colnames(cost)<-Cultivos;rownames(cost)<-c(Departamentos)
 Cost_total<-cost

@@ -3,7 +3,7 @@ library(plyr)
 library(stringi)
 
 #compilacion bases de datos ICA, SIPSA de insumos pecuarios en Colombia
-RegistroICAV<-read.csv("RegistroICA_Vet2020.csv", h=T)
+RegistroICAV<-read.csv("RegistroICA_Vet2020.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
 names(RegistroICAV)[1]<-"Producto";RegistroICAV<-RegistroICAV[c(1:3)]
 RegistroICAV<-subset(RegistroICAV,Producto!= "")
 RegistroICAV$Producto<-gsub( "®", " ", as.character(RegistroICAV$Producto), 1)

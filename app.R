@@ -1,30 +1,35 @@
 library(ggplot2)
-library(shiny)
+#library(shiny)
 library(shinythemes)
 library(shinyWidgets)
 library(colmaps)
 library(data.table)
+library(gridExtra)
+library(datasets)
 source('Costos_Pec.R', encoding = 'UTF-8')
 
-preguntas<-fluidPage(
+ui<-fluidPage(
   setBackgroundImage(
     src = "Bkg_2.jpg"
   ),
   theme=shinytheme("simplex"),
-  titlePanel(windowTitle = "Costos de Producción",
-             title=div(img(src="FAO.jpg", height = 80),"Costos de Producción")
+  titlePanel(
+    fluidRow(
+      column(5, "Costos de Producción",style='padding-top:25px;font-size:45px;'),
+      column(2, img(height = 120, src = "ECHO.png"),style='padding-left:0px; padding-right:20px; padding-top:0px; padding-bottom:0px;'), 
+      column(2, img(height = 80, src = "fao_azul1.png"),style='padding-left:10px; padding-right:20px; padding-top:15px; padding-bottom:0px;'),
+      column(2, img(height = 120, src = "MINAGRICULTURA.png"))
+    )
+    #padding-left:10px; padding-right:0px; padding-top:30px; padding-bottom:0px
   ),
   navbarPage("", 
-    tabPanel("Costos Agricolas",
+    tabPanel("Costos Agrícolas",
            sidebarPanel(
              tags$h3("Seleccione:"),
              selectInput("txt1", "Departamento:", sort(Departamentos)),
              selectInput("txt2", "Linea:", sort(Cultivos)),
-             downloadButton(outputId = "downloaderA", label = "Download csv"),
-             downloadButton(outputId = "downloaderA2", label = "Download pdf"),
-             div(style="height:50px;;",HTML("<br()>")),
-             tags$img(src = "ECHO.png", height = 80),
-             tags$img(src = "MINAGRICULTURA.png", height = 80)
+             downloadButton(outputId = "downloaderA", label = "Descargar csv"),
+             downloadButton(outputId = "downloaderA2", label = "Descargar pdf")
              ),
            
            mainPanel(
@@ -37,11 +42,9 @@ preguntas<-fluidPage(
              tags$h3("Seleccione:"),
              selectInput("txt1pec", "Departamento:", sort(Departamentos)),
              selectInput("txt2pec", "Linea:", sort(Lineas)),
-             downloadButton(outputId = "downloaderP", label = "Download csv"),
-             downloadButton(outputId = "downloaderP2", label = "Download pdf"),
-             div(style="height:50px;;",HTML("<br()>")),
-             tags$img(src = "ECHO.png", height = 80),
-             tags$img(src = "MINAGRICULTURA.png", height = 80)
+             downloadButton(outputId = "downloaderP", label = "Descargar csv"),
+             downloadButton(outputId = "downloaderP2", label = "Descargar pdf")
+             
            ),
            mainPanel(
              h3("Costos de Producción Pecuaria"),
@@ -54,9 +57,7 @@ preguntas<-fluidPage(
              selectInput("txt1map", "Cultivo:", sort(Cultivos)),
              selectInput("txt2map", "Item:", names(costos)),
              downloadButton(outputId = "downloaderM", label = "Download Map"),
-             div(style="height:50px;;",HTML("<br()>")),
-             tags$img(src = "ECHO.png", height = 80),
-             tags$img(src = "MINAGRICULTURA.png", height = 80)
+             div(style="height:50px;;",HTML("<br()>"))
              
            ),
            mainPanel(
@@ -69,10 +70,7 @@ preguntas<-fluidPage(
              tags$h3("Seleccione:"),
              selectInput("txt1pmap", "Producto:", sort(Lineas)),
              selectInput("txt2pmap", "Item:", names(costosP)),
-             downloadButton(outputId = "downloaderMP", label = "Download Map"),
-             div(style="height:50px;;",HTML("<br()>")),
-             tags$img(src = "ECHO.png", height = 80),
-             tags$img(src = "MINAGRICULTURA.png", height = 80)
+             downloadButton(outputId = "downloaderMP", label = "Download Map")
              
            ),
            mainPanel(
@@ -83,7 +81,7 @@ preguntas<-fluidPage(
 )
 )
 
-tabla<- function (input, output){
+server<- function (input, output){
   
   CosAg<- reactive({
     Data<-Deptos[[input$txt1]][[input$txt2]]
@@ -268,4 +266,4 @@ tabla<- function (input, output){
       })
    
 }
-shinyApp(ui=preguntas, server =tabla)
+shinyApp(ui=ui, server =server)

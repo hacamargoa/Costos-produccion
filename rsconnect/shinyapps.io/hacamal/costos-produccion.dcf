@@ -1,0 +1,11 @@
+name: costos-produccion
+title:
+username:
+account: hacamal
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4427423
+bundleId: 4859198
+url: https://hacamal.shinyapps.io/costos-produccion/
+when: 1627364523.00756
+lastSyncTime: 1627364523.00756

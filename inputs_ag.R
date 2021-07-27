@@ -5,7 +5,7 @@ library(stringi)
 
 #Ventas de insumos, (Produccion+Importacion-Exportacion) datos de las estadísticas de ingredientes activos agrícolas Colombia del ICA (1)
 
-Cons_ins<-read.csv("Cons_ins_ag.csv", h=T)
+Cons_ins<-read.csv("Cons_ins_ag.csv", h=T,stringsAsFactors=FALSE, fileEncoding="latin1")
 Cons_ins$kg.Lt<-ifelse(Cons_ins$kg.Lt<0,0,Cons_ins$kg.Lt)
 temp<-list()
 for (i in unique(Cons_ins$Accion)){
@@ -16,7 +16,7 @@ Cons_ins<-do.call("rbind",temp);names(Cons_ins)[names(Cons_ins)=="Ing_activo"] <
 Cons_ins<-na.omit(Cons_ins)
 
 #Compilacion bases de datos ICA, SIPSA y consumo de insumos en Colombia
-RegistroICA<-read.csv("Registro_ICA2020.csv", h=T) #base de datos de insecticidas, fungicidas registrados por cultivo (2)
+RegistroICA<-read.csv("Registro_ICA2020.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1") #base de datos de insecticidas, fungicidas registrados por cultivo (2)
 RegistroICA<-RegistroICA[,-c(1:3,5,7:11,13)];names(RegistroICA)[1]<-"Producto"
 RegistroICA<-subset(RegistroICA,Producto!= "")
 RegistroICA$Producto<-gsub( "®", " ", as.character(RegistroICA$Producto), 1)
