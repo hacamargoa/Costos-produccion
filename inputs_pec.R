@@ -3,7 +3,7 @@ library(plyr)
 library(stringi)
 
 #compilacion bases de datos ICA, SIPSA de insumos pecuarios en Colombia
-RegistroICAV<-read.csv("RegistroICA_Vet2020.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
+RegistroICAV<-read.csv("RegistroICA_Vet2020.csv", h=T)#, stringsAsFactors=FALSE, fileEncoding="latin1")
 names(RegistroICAV)[1]<-"Producto";RegistroICAV<-RegistroICAV[c(1:3)]
 RegistroICAV<-subset(RegistroICAV,Producto!= "")
 RegistroICAV$Producto<-gsub( "®", " ", as.character(RegistroICAV$Producto), 1)
@@ -18,9 +18,9 @@ for (i in 1:length(data_list_pec)){
   data_list_pec[[i]]$Presentacion2<-sapply(strsplit(as.character(data_list_pec[[i]]$'Presentación del producto'), " "), "[[",2)
   data_list_pec[[i]]$prec.dosis=0
   for (j in 1:nrow(data_list_pec[[i]])){
-  data_list_pec[[i]][j,]$prec.dosis<-ifelse(data_list_pec[[i]][j,]$Presentacion2=="gramos",(as.numeric(data_list_pec[[i]][j,]$`Precio promedio de diciembre de 2020`)/as.numeric(data_list_pec[[i]][j,]$Presentacion1))*50,
-                                            ifelse(data_list_pec[[i]][j,]$Presentacion2=="centímetros",(as.numeric(data_list_pec[[i]][j,]$`Precio promedio de diciembre de 2020`)/as.numeric(data_list_pec[[i]][j,]$Presentacion1))*10,
-                                       as.numeric(data_list_pec[[i]][j,]$`Precio promedio de diciembre de 2020`)/as.numeric(data_list_pec[[i]][j,]$Presentacion1)/100))
+  data_list_pec[[i]][j,]$prec.dosis<-ifelse(data_list_pec[[i]][j,]$Presentacion2=="gramos"|data_list_pec[[i]][j,]$Presentacion2=="centímetros",(as.numeric(data_list_pec[[i]][j,]$Precio_actual)/as.numeric(data_list_pec[[i]][j,]$Presentacion1))*10,
+                                                   ifelse(data_list_pec[[i]][j,]$Presentacion2=="M.U.I",(as.numeric(data_list_pec[[i]][j,]$Precio_actual)/as.numeric(data_list_pec[[i]][j,]$Presentacion1))*2,
+                                       as.numeric(data_list_pec[[i]][j,]$Precio_actual)/as.numeric(data_list_pec[[i]][j,]$Presentacion1)/100))
   
 }
   data_list_pec[[i]]$Producto<-toupper(data_list_pec[[i]]$Producto)

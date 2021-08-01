@@ -6,10 +6,17 @@ library(kableExtra)
 Tabla_costos_ag<-read.csv("Tabla_costos.csv", h=T,stringsAsFactors=FALSE, fileEncoding="latin1")
 Arriendos<-read.csv("Arriendos.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
 Maquina<-read.csv("Maquina.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
-Perc_propag<-c(0.224,0,0.064,0.054,0.200,0,0.111,0.176,0.175,0,0.186,0.168,0,0.2,0,0.075,0.205,0,0.16,0.102,0,0.31,0,0,0.2,0.20,0.14,0.09)
+Perc_propag<-read.csv("Perc_propag.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
 Deptos<-list()
+#dep<-c("Caquetá", "Nariño", "Putumayo","Cauca", "Bolivar","Cordoba", "Magdalena","Sucre", "Atlántico","Guajira", "Cesar", "Santander", "N de Santander","Tolima", 
+#        "Huila",   "Caldas",  "Quindío", "Risaralda" , "Meta", "Casanare","Vichada", "Arauca", "Boyacá",  "Cundinamarca", "Antioquia","Valle del Cauca","Amazonas",
+#        "Chocó",   "San Andrés", "Guaviare","Vaupés",  "Guainía")
+# dep<-iconv(dep,to="UTF-8")
+
 for(j in Departamentos){
   Cultiv<-list()
+  Val_Gasol<-8500
+  Val_Aceite<-15000
   for (i in 1:length(Cultivos)){
     temp<-Tabla_costos_ag
     for (f in 1:15){
@@ -23,12 +30,16 @@ for(j in Departamentos){
     temp[16,4]<-Maquina[Maquina$Departamento==j,2]
     temp[20,3]<-1;temp[20,c(4)]<-500000
     temp$Costo<-as.numeric(temp$CANTIDAD)*as.numeric(temp$Valor_Uni)
-    temp[19,3]<-1;temp[19,c(4,5)]<-sum(temp[,5])*0.06;temp[21,3]<-1;temp[21,c(4,5)]<-sum(temp[,5])*0.06
-    temp[17,3]<-1;temp[17,c(4,5)]<-sum(temp[,5])*Perc_propag[i]
+    temp[19,1]<-ifelse(i==match("Madera_sos",Cultivos)|i==match("Madera_cos",Cultivos),"Mat. Equip. Gasol. y Aceite",temp[19,1]);temp[19,3]<-1
+    temp[19,c(4,5)]<-ifelse(i==match("Madera_sos",Cultivos),sum(temp[,5])*0.1+35.5*Val_Gasol+2.7*Val_Aceite,
+                         ifelse(i==match("Madera_cos",Cultivos),sum(temp[,5])*0.1+71.15*Val_Gasol+5.35*Val_Aceite,sum(temp[,5])*0.06))
+    temp[21,3]<-1;temp[21,c(4,5)]<-sum(temp[,5])*0.06
+    temp[17,3]<-1;temp[17,c(4,5)]<-sum(temp[,5])*Perc_propag[Perc_propag$Cultivo==Cultivos[i],2]
     Cultiv[[i]]<-temp
     }
   Deptos[[j]]<-Cultiv;names(Deptos[[j]])<-Cultivos
 }
+#names(Deptos)<-dep
 #Calculo de tablas de costos para la creacion de mapas
 cost<-data.frame(matrix(NA,nrow=32,ncol=length(Cultivos)))
 codesDepto<-read.csv("codedepto.csv",h=T, stringsAsFactors=FALSE, fileEncoding="latin1")

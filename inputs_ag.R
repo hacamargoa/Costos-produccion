@@ -16,13 +16,13 @@ Cons_ins<-do.call("rbind",temp);names(Cons_ins)[names(Cons_ins)=="Ing_activo"] <
 Cons_ins<-na.omit(Cons_ins)
 
 #Compilacion bases de datos ICA, SIPSA y consumo de insumos en Colombia
-RegistroICA<-read.csv("Registro_ICA2020.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1") #base de datos de insecticidas, fungicidas registrados por cultivo (2)
+RegistroICA<-read.csv("Registro_ICA2020.csv", h=T)#fileEncoding="latin1") #base de datos de insecticidas, fungicidas registrados por cultivo (2)
 RegistroICA<-RegistroICA[,-c(1:3,5,7:11,13)];names(RegistroICA)[1]<-"Producto"
 RegistroICA<-subset(RegistroICA,Producto!= "")
 RegistroICA$Producto<-gsub( "®", " ", as.character(RegistroICA$Producto), 1)
 RegistroICA$Producto<-sapply(strsplit(as.character(RegistroICA$Producto), " "), "[[",1)
 #Costos de insumos y servicios SIPSA mas actual (3)
-data_list <- import_list("Anexos_Insumos_dic_2020.xlsx")
+suppressWarnings(data_list <- import_list("Anexos_Insumos_actual.xlsx"))
 index<-na.omit(data_list[[1]][,-1]);colnames(index)<-c("Id","Cont")
 data_list<-data_list[c(3:18)]
 data_list_ag<-data_list[grepl("1.",names(data_list))]
@@ -58,8 +58,8 @@ for (i in 1:length(data_list_ag)){
   data_list_ag[[i]]$Presentacion2<-sapply(strsplit(as.character(data_list_ag[[i]]$'Presentación del producto'), " "), "[[",2)
   data_list_ag[[i]]$prec.kg.lt=0
   for (j in 1:nrow(data_list_ag[[i]])){
-  data_list_ag[[i]][j,]$prec.kg.lt<-ifelse(data_list_ag[[i]][j,]$Presentacion2=="gramos"|data_list_ag[[i]][j,]$Presentacion2=="centímetros",(as.numeric(data_list_ag[[i]][j,]$`Precio promedio de diciembre de 2020`)/as.numeric(data_list_ag[[i]][j,]$Presentacion1))*1000,
-                                       as.numeric(data_list_ag[[i]][j,]$`Precio promedio de diciembre de 2020`)/as.numeric(data_list_ag[[i]][j,]$Presentacion1))
+  data_list_ag[[i]][j,]$prec.kg.lt<-ifelse(data_list_ag[[i]][j,]$Presentacion2=="gramos"|data_list_ag[[i]][j,]$Presentacion2=="centímetros",(as.numeric(data_list_ag[[i]][j,]$Precio_actual)/as.numeric(data_list_ag[[i]][j,]$Presentacion1))*1000,
+                                       as.numeric(data_list_ag[[i]][j,]$Precio_actual)/as.numeric(data_list_ag[[i]][j,]$Presentacion1))
 }
   data_list_ag[[i]]$Producto<-toupper(data_list_ag[[i]]$Producto)
 }

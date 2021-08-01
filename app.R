@@ -8,6 +8,7 @@ library(gridExtra)
 library(datasets)
 source('Costos_Pec.R', encoding = 'UTF-8')
 
+
 ui<-fluidPage(
   setBackgroundImage(
     src = "Bkg_2.jpg"
@@ -16,20 +17,20 @@ ui<-fluidPage(
   titlePanel(
     fluidRow(
       column(5, "Costos de Producción",style='padding-top:25px;font-size:45px;'),
-      column(2, img(height = 120, src = "ECHO.png"),style='padding-left:0px; padding-right:20px; padding-top:0px; padding-bottom:0px;'), 
-      column(2, img(height = 80, src = "fao_azul1.png"),style='padding-left:10px; padding-right:20px; padding-top:15px; padding-bottom:0px;'),
-      column(2, img(height = 120, src = "MINAGRICULTURA.png"))
+      column(2, img(height = 100, src = "ECHO.png"),style='padding-left:0px; padding-right:20px; padding-top:0px; padding-bottom:0px;'), 
+      column(2, img(height = 70, src = "fao_azul1.png"),style='padding-left:10px; padding-right:20px; padding-top:10px; padding-bottom:0px;'),
+      column(2, img(height = 100, src = "MINAGRICULTURA.png"))
     )
     #padding-left:10px; padding-right:0px; padding-top:30px; padding-bottom:0px
   ),
   navbarPage("", 
-    tabPanel("Costos Agrícolas",
-           sidebarPanel(
+  tabPanel("Costos Agrícolas",
+             sidebarPanel(
              tags$h3("Seleccione:"),
              selectInput("txt1", "Departamento:", sort(Departamentos)),
-             selectInput("txt2", "Linea:", sort(Cultivos)),
+             selectInput("txt2", "Línea:", sort(Cultivos)),
              downloadButton(outputId = "downloaderA", label = "Descargar csv"),
-             downloadButton(outputId = "downloaderA2", label = "Descargar pdf")
+             downloadButton(outputId = "downloaderA2", label = "Descargar pdf"),
              ),
            
            mainPanel(
@@ -41,7 +42,7 @@ ui<-fluidPage(
            sidebarPanel(
              tags$h3("Seleccione:"),
              selectInput("txt1pec", "Departamento:", sort(Departamentos)),
-             selectInput("txt2pec", "Linea:", sort(Lineas)),
+             selectInput("txt2pec", "Línea:", sort(Lineas)),
              downloadButton(outputId = "downloaderP", label = "Descargar csv"),
              downloadButton(outputId = "downloaderP2", label = "Descargar pdf")
              
@@ -56,7 +57,7 @@ ui<-fluidPage(
              tags$h3("Seleccione:"),
              selectInput("txt1map", "Cultivo:", sort(Cultivos)),
              selectInput("txt2map", "Item:", names(costos)),
-             downloadButton(outputId = "downloaderM", label = "Download Map"),
+             downloadButton(outputId = "downloaderM", label = "Descargar Mapa"),
              div(style="height:50px;;",HTML("<br()>"))
              
            ),
@@ -70,7 +71,7 @@ ui<-fluidPage(
              tags$h3("Seleccione:"),
              selectInput("txt1pmap", "Producto:", sort(Lineas)),
              selectInput("txt2pmap", "Item:", names(costosP)),
-             downloadButton(outputId = "downloaderMP", label = "Download Map")
+             downloadButton(outputId = "downloaderMP", label = "Descargar Mapa")
              
            ),
            mainPanel(
@@ -184,21 +185,22 @@ server<- function (input, output){
       Data1V<-rbind(DataV[c(1:4),],subMoV,DataV[c(5:14),],subInsV,DataV[c(15:19),],subOtrV,DataV[c(20,22),],subFijV,sumrowV)
       kable(Data1V, row.names = FALSE,caption = paste0("Costos de Produccion para ",input$txt2pec," en ",input$txt1pec), booktabs = TRUE) %>%
         kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
-        row_spec(24, bold = T,italic=T) %>% # format last row
+        row_spec(26, bold = T,italic=T) %>% # format last row
+        row_spec(1, bold = T) %>% # format last row
         row_spec(5, bold = T) %>% # format last row
-        row_spec(13, bold = T) %>% # format last row
-        row_spec(20, bold = T) %>% # format last row
-        row_spec(23, bold = T) %>% # format last row
+        row_spec(16, bold = T) %>% # format last row
+        row_spec(22, bold = T) %>% # format last row
+        row_spec(25, bold = T) %>% # format last row
         column_spec(1, bold = T)%>% # format first column
         footnote(ifelse(is.na(unitsV[which(unitsV[1]==input$txt1pec),input$txt2pec]),"Valores estimados con base en promedios de otros departamentos",""))
           }
     
     CosMap<-function(){
         colmap(departamentos, data = costos[[input$txt2map]], data_id = "id_depto",var=input$txt1map)+
-        scale_fill_distiller(palette ="YlOrRd", trans = "reverse", na.value = "snow3",name = "Miles de Pesos", 
-                              labels = scales::unit_format(unit = "",scale = 1e-3)) +
-        ggtitle(paste(input$txt2map, "de ", input$txt1map))+guides(fill = guide_legend(reverse = TRUE))+
-        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"),legend.title = element_text(hjust = 0.5, size =20, face ="bold"), 
+        scale_fill_distiller(palette ="YlOrRd", trans = "reverse", na.value = "snow3",name = "Miles de Pesos/ha", 
+                              labels = scales::unit_format(unit = "",scale = 1e-3),guide=guide_legend(reverse = TRUE)) +
+        ggtitle(paste(input$txt2map, "de ", input$txt1map))+ theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"),
+                                                                   legend.title = element_text(hjust = 0.5, size =20, face ="bold"), 
               legend.background = element_rect(fill = "transparent", color = "black"),legend.text = element_text(hjust = 0.5, size =15),
               legend.margin = margin(0.5, 1, 1, 1, "cm"),legend.key.size = unit(2, "lines"))
         
@@ -210,10 +212,11 @@ server<- function (input, output){
     
     CosMapP<-function(){
       colmap(departamentos, data = costosP[[input$txt2pmap]], data_id = "id_depto",var=input$txt1pmap)+
-        scale_fill_distiller(palette ="YlOrRd", trans = "reverse", na.value = "snow3",name = "Miles de Pesos", 
-                              labels = scales::unit_format(unit = "",scale = 1e-3)) +
-        ggtitle(paste(input$txt2pmap, "de ", input$txt1pmap))+guides(fill = guide_legend(reverse = TRUE))+
-        theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"),legend.title = element_text(hjust = 0.5, size =20, face ="bold"), 
+        scale_fill_distiller(palette ="YlOrRd", trans = "reverse", na.value = "snow3",
+                             name = paste0("Miles de Pesos/", ifelse(input$txt1pmap=="Piscícola","Kg",ifelse(input$txt1pmap=="Avícola_Ponedora"|input$txt1pmap=="Bovinos_leche"|input$txt1pmap=="Ovinos","animal/año", "animal/ciclo"))),
+                              labels = scales::unit_format(unit = "",scale = 1e-3),guide=guide_legend(reverse = TRUE)) +
+        ggtitle(paste(input$txt2pmap, "de ", input$txt1pmap))+ theme(plot.title = element_text(hjust = 0.5, size =25, face ="bold"),
+                                                                     legend.title = element_text(hjust = 0.5, size =20, face ="bold"), 
               legend.background = element_rect(fill = "white", color = "black"),legend.text = element_text(hjust = 0.5, size =15),
               legend.margin = margin(0.5, 1, 1, 1, "cm"),legend.key.size = unit(2, "lines"))
       

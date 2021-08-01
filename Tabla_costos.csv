@@ -1,21 +1,21 @@
 ACTIVIDADES,UNIDAD,CANTIDAD,Valor_Uni
-Preparacion Terreno , JORNAL ,0,0
-Siembra Y Preparacion Semilla, JORNAL ,0,0
+Preparación Terreno , JORNAL ,0,0
+Siembra Y Preparación Semilla, JORNAL ,0,0
 Labores de Cultivo, JORNAL ,0,0
 Control De Malezas, JORNAL ,0,0
-Aplicacion De Fertilizantes, JORNAL ,0,0
+Aplicación De Fertilizantes, JORNAL ,0,0
 Control De Plagas, JORNAL ,0,0
 Control De Enfermedades, JORNAL ,0,0
 Cosecha, JORNAL ,0,0
 Enmiendas,kilogramo,0,0
-Fertilizantes Edaficos,kilogramo,0,0
+Fertilizantes Edáficos,kilogramo,0,0
 Fertilizantes Foliares,litro,0,0
 Coadyuvantes,litro,0,0
 Herbicidas,litro,0,0
 Insecticidas,litro,0,0
 Fungicidas,litro,0,0
-Mecanizacion De Terreno,H/Maquina,0,0
-Material De Propagacion,UNIDAD,0,0
+Mecanización De Terreno,H/Maquina,0,0
+Material De Propagación,UNIDAD,0,0
  Transporte Insumos ,Bulto,0,0
 Materiales y Equipos,UNIDAD,0,0
  Transporte Cosecha ,Viaje,0,0

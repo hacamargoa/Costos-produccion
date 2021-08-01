@@ -1,5 +1,4 @@
 source('inputs_pec.R', encoding = 'UTF-8')
-
 #Ingreso de las unidades por item y calculo de los valores
 UnitsV<-import_list("tabla_de_costos_pec.xlsx")
 Lineas<-colnames(UnitsV[[1]][, -1])
@@ -8,23 +7,45 @@ unitsV<-UnitsV[[1]]
 
 #Especies
 ValorES<-list()
-for (j in 1:length(Lineas)){
-a<-as.character(if(j==1)unique(insumos[[3]][[2]]$`Nombre de la especie productiva`)[c(6:14)] else unique(insumos[[3]][[2]]$`Nombre de la especie productiva`)[c(15:24)])
-Especies<-insumos[[3]][[2]][insumos[[3]][[2]]$`Nombre de la especie productiva`%in% a,c(2,5,6,8)];names(Especies)=c("Departamento","Especie","Presentacion","Precio")
-Especies$Precio<-ifelse(Especies$Presentacion=="kilogramo",as.numeric(Especies$Precio)*250,as.numeric(Especies$Precio))
+Bovinos_carne<-c("Bovino Brahman x Pardo hembra 13-18 meses","Bovino Cebú hembra 13-18 meses","Bovino Cebú hembra 19-24 meses","Bovino Cebú hembra 37-48 meses",
+           "Bovino Cebú macho 13-18 meses",	"Bovino Cebú macho 19-24 meses", "Bovino Cebú macho 25-36 meses", "Bovino Criollo hembra 13-18 meses", "Bovino Criollo macho 13-18 meses",
+           "Bovino Criollo macho 37-48 meses")
+Bovinos_leche<-c("Bovino Gyr X Brahman Rojo y Blanco macho 0-12 meses","Bovino Gyr X Brahman Rojo y Blanco macho 13-18 meses","Bovino Gyrolando hembra 0-12 meses",
+            "Bovino Gyrolando hembra 13-18 meses","Bovino Holstein hembra 13-18 meses","Bovino Holstein hembra 19-24 meses","Bovino Holstein hembra 25-36 meses",
+            "Bovino Normando hembra 0-12 meses", "Bovino Normando hembra 19-24 meses")
+Porcinos<-c("Cerdo Criollo hembra-macho 45 días","Cerdo Landrace hembra 50-60 kilogramos","Cerdo Landrace hembra-macho 45 días","Cerdo Mejorado hembra 50-60 kilogramos",
+       "Cerdo Mejorado hembra-macho 50-60 kilogramos","Cerdo Pic hembra-macho 45 días","Cerdo Pic hembra-macho 50-60 kilogramos",
+       "Cerdo Pietran hembra 50-60 kilogramos","Cerdo Pietran hembra-macho 45 días","Cerdo Pietran hembra-macho 50-60 kilogramos")
+Avícola_Ponedora<-c("Gallina/Polla ponedora Babcock Brown hembra 1 día","Gallina/Polla ponedora Babcock Brown hembra 15 semanas", "Gallina/Polla ponedora Hy-Line Brown hembra 1 día",
+         "Gallina/Polla ponedora Lohmann Brown hembra 1 día", "Gallina/Polla ponedora Lohmann Brown hembra 15 semana")
+Avícola_engorde<-c("Pollo/Polla engorde Cobb hembra-macho 1 día","Pollo/Polla engorde Cobb hembra-macho 15 días","Pollo/Polla engorde Ross hembra-macho 1 día")
+Piscícola<-c("Alevino Bocachico hembra-macho 2,5-3,5 centímetros","Alevino Cachama Blanca macho 3-4 centímetros","Alevino Cachama Híbrida macho 2,5-3,5 centímetros",
+        "Alevino Mojarra o Tilapia Roja macho 3-4 centímetros")
+Caprinos<-vector();Ovinos<-vector()
+
+Esp<-list(Bovinos_carne,Bovinos_leche,Porcinos,Avícola_Ponedora,Avícola_engorde,Piscícola,Caprinos,Ovinos)
+
+semov<-insumos[[3]][[2]]
+suppressWarnings(semov$number<-1/readr::parse_number(semov$Presentación))
+semov$number=ifelse(is.na(semov$number),ifelse(semov$Presentación=="kilogramo",ifelse(semov$`Nombre de la especie productiva` %like%  "%Cerdo%",ifelse(semov$`Nombre de la especie productiva` %like% "%50-60%",50,20),
+                                                                                      ifelse(semov$`Nombre de la especie productiva` %like% "%37-48%"|semov$`Nombre de la especie productiva` %like% "%25-36%",470,
+                                                                                             ifelse(semov$`Nombre de la especie productiva` %like% "%19-24%",350,250))),1),semov$number)
+                                                           
+semov=na.omit(semov)
+for (j in Lineas){
+Especies<-semov[semov$`Nombre de la especie productiva`%in% eval(parse(text=paste(j))),c(2,5,10,8)];names(Especies)=c("Departamento","Especie","Presentacion","Precio")
+Especies$Precio<-as.numeric(Especies$Presentacion)*as.numeric(Especies$Precio)
 ValorEs<-Valor
 for (i in 1:nrow(ValorEs)){
-  temp<-subset(Especies,Especies[1]==as.character(ValorEs$Departamento[i]))
+  Dept<-iconv(ValorEs$Departamento[i],from="UTF-8",to="ASCII//TRANSLIT")
+  temp<-subset(Especies,Especies[1]==as.character(Dept))
   av<-mean(as.numeric(temp[,4]))
   ValorEs$Valor[i]<-av
 }
 ValorES[[j]]<-ValorEs
 }
-ValorES[[3]][,2]<-140000
-ValorES[[4]][,2]<-1500
-ValorES[[5]][,2]<-40
-ValorES[[6]][,2]<-100000
-ValorES[[7]][,2]<-100000
+ValorES[[7]][,2]<-300000
+ValorES[[8]][,2]<-200000
 #Usar Valor *3 para Jornales
 
 #Enmiendas, Herbicidas, Insecticidas
@@ -34,7 +55,8 @@ InsecV<-data_list_ag[[5]][,c(2,11,12,13,14,17)]
 InsecV<-subset(InsecV,Presentacion2=="litro"|Presentacion2=="litros"|Presentacion2=="kilogramo")
 ValorInV<-Valor[1]
 for (j in 1:nrow(ValorInV)){
-  temp<-subset(InsecV,InsecV[1]==as.character(ValorInV$Departamento[j]))
+  Dept<-iconv(ValorInV$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+  temp<-subset(InsecV,InsecV[1]==as.character(Dept))
   av<-mean(as.numeric(temp[,3],na.rm = TRUE))
   ValorInV$Valor[j]<-av
 }
@@ -43,7 +65,8 @@ HerbiV<-data_list_ag[[4]][,c(2,11,12,13,14,17)]
 HerbiV<-subset(HerbiV,Presentacion2=="litro"|Presentacion2=="litros"|Presentacion2=="kilogramo")
 ValorHeV<-Valor[1]
 for (j in 1:nrow(ValorHeV)){
-  temp<-subset(HerbiV,HerbiV[1]==as.character(ValorHeV$Departamento[j]))
+  Dept<-iconv(ValorHeV$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+  temp<-subset(HerbiV,HerbiV[1]==as.character(Dept))
   av<-mean(as.numeric(temp[,3],na.rm = TRUE))
   ValorHeV$Valor[j]<-av
 }
@@ -58,13 +81,14 @@ ValorSal$Valor<-2000
 
 #Hormonas
 ValorHOR<-list()
-Lineas2<- sapply(strsplit(Lineas, "_"), "[[",1);Lineas2[c(4,5)]=c("Aves", "Peces")
+Lineas2<- sapply(strsplit(Lineas, "_"), "[[",1);Lineas2[c(4,5,6)]=c("Aves", "Aves", "Peces")
 for(i in 1:length(Lineas2)){
 Hormo<-data_list_pec[[4]][tolower(data_list_pec[[4]]$Linea) %like% paste0("%",tolower(Lineas2[i]),"%"),][c(2,8,10,11,12,14)];names(Hormo)[c(1,2)]<-c("Departamentos","Precio")
 ValorHor<-Valor[1]
 for (j in 1:nrow(ValorHor)){
   if(nrow(Hormo)!=0){
-  temp<-subset(Hormo,Hormo[1]==as.character(ValorHor$Departamento[j]))
+  Dept<-iconv(ValorHor$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+  temp<-subset(Hormo,Hormo[1]==as.character(Dept))
   av<-mean(as.numeric(temp[,5],na.rm = TRUE))
   ValorHor$Valor[j]<-av
   }else{
@@ -81,7 +105,8 @@ Med<-data_list_pec[[6]][data_list_pec[[6]]$Linea %like% paste0("%",Lineas2[i],"%
 ValorMed<-Valor[1]
 for (j in 1:nrow(ValorMed)){
   if(nrow(Med)!=0){
-  temp<-subset(Med,Med[1]==as.character(ValorMed$Departamento[j]))
+  Dept<-iconv(ValorMed$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+  temp<-subset(Med,Med[1]==as.character(Dept))
   av<-mean(as.numeric(temp[,2],na.rm = TRUE))
   ValorMed$Valor[j]<-av
   }else{
@@ -98,7 +123,8 @@ for(i in 1:length(Lineas2)){
   ValorVac<-Valor[1]
   for (j in 1:nrow(ValorVac)){
     if(nrow(Vac)!=0){
-      temp<-subset(Vac,Vac[1]==as.character(ValorVac$Departamento[j]))
+      Dept<-iconv(ValorVac$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+      temp<-subset(Vac,Vac[1]==as.character(Dept))
       av<-mean(as.numeric(temp[,2],na.rm = TRUE))
       ValorVac$Valor[j]<-av
     }else{
@@ -115,7 +141,8 @@ for(i in 1:length(Lineas2)){
   ValorVit<-Valor[1]
   for (j in 1:nrow(ValorVit)){
     if(nrow(Vit)!=0){
-      temp<-subset(Vit,Vit[1]==as.character(ValorVit$Departamento[j]))
+      Dept<-iconv(ValorVit$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+      temp<-subset(Vit,Vit[1]==as.character(Dept))
       av<-mean(as.numeric(temp[,2],na.rm = TRUE))
       ValorVit$Valor[j]<-av
     }else{
@@ -136,7 +163,8 @@ for(i in 1:length(Lineas2)){
   ValorAlim<-Valor[1]
   for (j in 1:nrow(ValorAlim)){
     if(nrow(Alim)!=0){
-      temp<-subset(Alim,Alim[1]==as.character(ValorAlim$Departamento[j]))
+      Dept<-iconv(ValorAlim$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+      temp<-subset(Alim,Alim[1]==as.character(Dept))
       av<-mean(as.numeric(temp[,2],na.rm = TRUE))
       ValorAlim$Valor[j]<-av
     }else{

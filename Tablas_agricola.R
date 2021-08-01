@@ -15,23 +15,22 @@ Valor <- units[c(1, 2)]
 names(Valor)[2] <- "Valor"
 Valor[2] <- NA
 for (i in 1:nrow(Valor)) {
-  temp <- subset(Jornal, Jornal[1] == as.character(Valor$Departamento[i]))
+  Dept<-iconv(Valor$Departamento[i],from="UTF-8",to="ASCII//TRANSLIT")
+  temp <- subset(Jornal, Jornal[1] == as.character(Dept))
   av <- mean(as.numeric(temp[, 3]))
   Valor$Valor[i] <- av
 }
 
 #Enmiendas, Fertilizantes, Foliares y Coadyuvantes
-Enmiendas <-
-  subset(
-    data_list_ag[[2]],
+Enmiendas <-subset(data_list_ag[[2]],
     Producto == "CAL" |
       Producto == "ABONO" |
       Producto == "NUTRISUELO" | Producto == "ABONISSA"
   )[, c(2, 5, 11, 12)]
 ValorE <- Valor
 for (i in 1:nrow(ValorE)) {
-  temp <-
-    subset(Enmiendas, Enmiendas[1] == as.character(ValorE$Departamento[i]))
+  Dept<-iconv(ValorE$Departamento[i],from="UTF-8",to="ASCII//TRANSLIT")
+  temp <-  subset(Enmiendas, Enmiendas[1] == as.character(Dept))
   av <- mean(as.numeric(temp[, 4]))
   ValorE$Valor[i] <- av
 }
@@ -49,7 +48,8 @@ Ferti <-
   )[, c(2, 5, 11, 12)]
 ValorFe <- Valor
 for (i in 1:nrow(ValorFe)) {
-  temp <- subset(Ferti, Ferti[1] == as.character(ValorFe$Departamento[i]))
+  Dept<-iconv(ValorFe$Departamento[i],from="UTF-8",to="ASCII//TRANSLIT")
+  temp <- subset(Ferti, Ferti[1] == as.character(Dept))
   av <- mean(as.numeric(temp[, 4]))
   ValorFe$Valor[i] <- av
 }
@@ -58,8 +58,8 @@ Foliares <-
   subset(data_list_ag[[2]], Presentacion2 == "litro")[, c(2, 5, 11, 12)]
 ValorF <- Valor
 for (i in 1:nrow(ValorF)) {
-  temp <-
-    subset(Foliares, Foliares[1] == as.character(ValorF$Departamento[i]))
+  Dept<-iconv(ValorF$Departamento[i],from="UTF-8",to="ASCII//TRANSLIT")
+  temp <-subset(Foliares, Foliares[1] == as.character(Dept))
   av <- mean(as.numeric(temp[, 4]))
   ValorF$Valor[i] <- av
 }
@@ -68,7 +68,8 @@ Coadyu <-
   subset(data_list_ag[[1]], Presentacion2 == "litro")[, c(2, 5, 11, 12)]
 ValorC <- Valor
 for (i in 1:nrow(ValorC)) {
-  temp <- subset(Coadyu, Coadyu[1] == as.character(ValorC$Departamento[i]))
+  Dept<-iconv(ValorC$Departamento[i],from="UTF-8",to="ASCII//TRANSLIT")
+  temp <- subset(Coadyu, Coadyu[1] == as.character(Dept))
   av <- mean(as.numeric(temp[, 4]))
   ValorC$Valor[i] <- av
 }
@@ -79,6 +80,7 @@ Val <- list(Valor, ValorE, ValorFe, ValorF, ValorC)
 #Fungicidas
 ValorFU <- list()
 Cult2 <- sapply(strsplit(Cultivos, "_"), "[[", 1)
+Cult2 <- iconv(Cult2,from="UTF-8",to="ASCII//TRANSLIT")
 for (i in 1:length(Cult2)) {
   Fungi <-
     data_list_ag[[3]][data_list_ag[[3]]$CULTIVO %like% paste0("%", Cult2[i], "%"), ][, c(2, 11, 12, 13, 14, 17)]
@@ -91,13 +93,13 @@ for (i in 1:length(Cult2)) {
   ValorFu <- Valor[1]
   if (nrow(Fungi) > 0) {
     for (j in 1:nrow(ValorFu)) {
-      temp <- subset(Fungi, Fungi[1] == as.character(ValorFu$Departamento[j]))
+      Dept<-iconv(ValorFu$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+      temp <- subset(Fungi, Fungi[1] == as.character(Dept))
       total <- sum(temp$Perc, na.rm = TRUE)
       temp$Perc2 <- temp$Perc / total
-      av <-
-        sum(as.numeric(temp[, 3]) * temp$Perc2, na.rm = TRUE)
+      av <-sum(as.numeric(temp[, 3]) * temp$Perc2, na.rm = TRUE)
       if (av == 0) {
-        temp <- subset(Fungi, Fungi[1] == as.character(ValorFu$Departamento[j]))
+        temp <- subset(Fungi, Fungi[1] == as.character(Dept))
         av <- mean(as.numeric(temp[, 3]), na.rm = TRUE)
         av <- ifelse(av > 100000, 100000, av)
       }
@@ -112,7 +114,8 @@ for (i in 1:length(Cult2)) {
           Presentacion2 == "kilogramo"
       )[, c(2, 11, 12, 13, 14, 17)]
     for (j in 1:nrow(ValorFu)) {
-      temp <- subset(Fungi, Fungi[1] == as.character(ValorFu$Departamento[j]))
+      Dept<-iconv(ValorFu$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+      temp <- subset(Fungi, Fungi[1] == as.character(Dept))
       av <- mean(as.numeric(temp[, 3]), na.rm = TRUE)
       av <- ifelse(av > 100000, 100000, av)
       ValorFu$Valor[j] <- av
@@ -138,13 +141,14 @@ for (i in 1:length(Cult2)) {
   ValorHe <- Valor[1]
   if (nrow(Herbi) > 0) {
     for (j in 1:nrow(ValorHe)) {
-      temp <- subset(Herbi, Herbi[1] == as.character(ValorHe$Departamento[j]))
+      Dept<-iconv(ValorHe$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+      temp <- subset(Herbi, Herbi[1] == as.character(Dept))
       total <- sum(temp$Perc, na.rm = TRUE)
       temp$Perc2 <- temp$Perc / total
       av <-
         sum(as.numeric(temp[, 3]) * temp$Perc2, na.rm = TRUE)
       if (av == 0) {
-        temp <- subset(Herbi, Herbi[1] == as.character(ValorHe$Departamento[j]))
+        temp <- subset(Herbi, Herbi[1] == as.character(Dept))
         av <- mean(as.numeric(temp[, 3]), na.rm = TRUE)
       }
       ValorHe$Valor[j] <- av
@@ -158,7 +162,8 @@ for (i in 1:length(Cult2)) {
           Presentacion2 == "kilogramo"
       )[, c(2, 11, 12, 13, 14, 17)]
     for (j in 1:nrow(ValorHe)) {
-      temp <- subset(Herbi, Herbi[1] == as.character(ValorHe$Departamento[j]))
+      Dept<-iconv(ValorHe$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
+      temp <- subset(Herbi, Herbi[1] == as.character(Dept))
       av <- mean(as.numeric(temp[, 3]), na.rm = TRUE)
       ValorHe$Valor[j] <- av
     }
@@ -183,8 +188,9 @@ for (i in 1:length(Cult2)) {
   ValorIn <- Valor[1]
   if (nrow(Insect) > 0) {
     for (j in 1:nrow(ValorIn)) {
+      Dept<-iconv(ValorIn$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
       temp <-
-        subset(Insect, Insect[1] == as.character(ValorIn$Departamento[j]))
+        subset(Insect, Insect[1] == as.character(Dept))
       total <- sum(temp$Perc, na.rm = TRUE)
       temp$Perc2 <- temp$Perc / total
       av <-
@@ -192,7 +198,7 @@ for (i in 1:length(Cult2)) {
       if (av == 0) {
         temp <-
           subset(Insect,
-                 Insect[1] == as.character(ValorIn$Departamento[j]))
+                 Insect[1] == as.character(Dept))
         av <- mean(as.numeric(temp[, 3]), na.rm = TRUE)
       }
       ValorIn$Valor[j] <- av
@@ -206,8 +212,9 @@ for (i in 1:length(Cult2)) {
           Presentacion2 == "kilogramo"
       )[, c(2, 11, 12, 13, 14, 17)]
     for (j in 1:nrow(ValorIn)) {
+      Dept<-iconv(ValorIn$Departamento[j],from="UTF-8",to="ASCII//TRANSLIT")
       temp <-
-        subset(Insect, Insect[1] == as.character(ValorIn$Departamento[j]))
+        subset(Insect, Insect[1] == as.character(Dept))
       av <- mean(as.numeric(temp[, 3]), na.rm = TRUE)
       ValorIn$Valor[j] <- av
     }
