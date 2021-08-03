@@ -234,7 +234,7 @@ for (i in 1:length(Val)) {
   colnames(Val[[i]]) <- c("Departamento", Cultivos)
 }
 Val1 <- append(rep(list(Val[[1]]), 8), Val[c(2:5)])
-Val2 <- list(ValorFu, ValorHe, ValorIn)
+Val2 <- list(ValorHe, ValorIn, ValorFu)
 Val3 <- append(Val1, Val2)
 
 for (i in 1:length(Val3)) {

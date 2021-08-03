@@ -1,6 +1,7 @@
 source('inputs_pec.R', encoding = 'UTF-8')
 #Ingreso de las unidades por item y calculo de los valores
 UnitsV<-import_list("tabla_de_costos_pec.xlsx")
+
 Lineas<-colnames(UnitsV[[1]][, -1])
 unitsV<-UnitsV[[1]]
 
@@ -27,6 +28,7 @@ Esp<-list(Bovinos_carne,Bovinos_leche,Porcinos,Avícola_Ponedora,Avícola_engord
 
 semov<-insumos[[3]][[2]]
 suppressWarnings(semov$number<-1/readr::parse_number(semov$Presentación))
+#Pesos de animales por edad (1)
 semov$number=ifelse(is.na(semov$number),ifelse(semov$Presentación=="kilogramo",ifelse(semov$`Nombre de la especie productiva` %like%  "%Cerdo%",ifelse(semov$`Nombre de la especie productiva` %like% "%50-60%",50,20),
                                                                                       ifelse(semov$`Nombre de la especie productiva` %like% "%37-48%"|semov$`Nombre de la especie productiva` %like% "%25-36%",470,
                                                                                              ifelse(semov$`Nombre de la especie productiva` %like% "%19-24%",350,250))),1),semov$number)
@@ -198,3 +200,5 @@ ValV[[i]][,j]<-ifelse(is.na(ValV[[i]][,j]), mean((ValV[[i]][,j]),na.rm=TRUE),Val
 UnitsV[[i]][,j]<-ifelse(is.na(UnitsV[[i]][,j]), mean((UnitsV[[i]][,j]),na.rm=TRUE),UnitsV[[i]][,j])
   }}
 
+#Fuentes
+#1. http://www.fao.org/ag/aga/agap/frg/lrrd/lrrd12/4/plas124a.htm Pesos cerdos por edad

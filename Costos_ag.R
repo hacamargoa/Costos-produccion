@@ -2,16 +2,13 @@ source('Tablas_agricola.R', encoding = 'UTF-8')
 
 library(knitr)
 library(kableExtra)
-#compilación de tablas de costos por departamento y linea productiva en la lista Deptos
+#compilación de tablas de costos por departamento y linea productiva en la lista Deptos 
 Tabla_costos_ag<-read.csv("Tabla_costos.csv", h=T,stringsAsFactors=FALSE, fileEncoding="latin1")
-Arriendos<-read.csv("Arriendos.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
-Maquina<-read.csv("Maquina.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
-Perc_propag<-read.csv("Perc_propag.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
+Arriendos<-read.csv("Arriendos.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1") #Precios Sipsa (1)
+Maquina<-read.csv("Maquina.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1") #Precios sipsa (1)
+Perc_propag<-read.csv("Perc_propag.csv", h=T, stringsAsFactors=FALSE, fileEncoding="latin1") #Creado de las información secundaria
 Deptos<-list()
-#dep<-c("Caquetá", "Nariño", "Putumayo","Cauca", "Bolivar","Cordoba", "Magdalena","Sucre", "Atlántico","Guajira", "Cesar", "Santander", "N de Santander","Tolima", 
-#        "Huila",   "Caldas",  "Quindío", "Risaralda" , "Meta", "Casanare","Vichada", "Arauca", "Boyacá",  "Cundinamarca", "Antioquia","Valle del Cauca","Amazonas",
-#        "Chocó",   "San Andrés", "Guaviare","Vaupés",  "Guainía")
-# dep<-iconv(dep,to="UTF-8")
+
 
 for(j in Departamentos){
   Cultiv<-list()
@@ -22,6 +19,7 @@ for(j in Departamentos){
     for (f in 1:15){
       temp$CANTIDAD[f]<-as.numeric(Units[[f]][Units[[f]]$Departamento==j,Cultivos[i]])
       temp$Valor_Uni[f]<-Val3[[f]][Val3[[f]]$Departamento==j,Cultivos[i]]
+      f=f+1
     }
     
     temp[18,3]<-sum(temp[9,3],temp[10,3])/50;temp[18,4]<-4000
@@ -42,7 +40,7 @@ for(j in Departamentos){
 #names(Deptos)<-dep
 #Calculo de tablas de costos para la creacion de mapas
 cost<-data.frame(matrix(NA,nrow=32,ncol=length(Cultivos)))
-codesDepto<-read.csv("codedepto.csv",h=T, stringsAsFactors=FALSE, fileEncoding="latin1")
+codesDepto<-read.csv("codedepto.csv",h=T, stringsAsFactors=FALSE, fileEncoding="latin1") # Codigos de colmap library
 codesDepto$id_depto<-sprintf("%02d",codesDepto$id_depto)
 colnames(cost)<-Cultivos;rownames(cost)<-c(Departamentos)
 Cost_total<-cost
@@ -72,3 +70,5 @@ costos[[i]]<-setDT(costos[[i]], keep.rownames = TRUE)[];names(costos[[i]])[1]<-"
 costos[[i]]<-rbind(costos[[i]],costos[[i]][which(costos[[i]][,1]=="Cundinamarca"),]);costos[[i]][33,1]<-"Bogota"
 costos[[i]]<-join(costos[[i]],codesDepto)
 }
+
+#1. https://www.dane.gov.co/index.php/estadisticas-por-tema/agropecuario/sistema-de-informacion-de-precios-sipsa/componente-insumos-1/componente-insumos-historicos

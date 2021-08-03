@@ -2,7 +2,7 @@ source('Costos_ag.R', encoding = 'UTF-8')
 library(plyr)
 library(stringi)
 
-#compilacion bases de datos ICA, SIPSA de insumos pecuarios en Colombia
+#compilacion bases de datos ICA, SIPSA de insumos pecuarios en Colombia (1)
 RegistroICAV<-read.csv("RegistroICA_Vet2020.csv", h=T)#, stringsAsFactors=FALSE, fileEncoding="latin1")
 names(RegistroICAV)[1]<-"Producto";RegistroICAV<-RegistroICAV[c(1:3)]
 RegistroICAV<-subset(RegistroICAV,Producto!= "")
@@ -29,3 +29,4 @@ RegistroICAV$Linea<-stri_trans_general(RegistroICAV$Linea, id = "Latin-ASCII")
 data_list_pec<-lapply(data_list_pec,join,RegistroICAV,by="Producto")
 
 
+# 1.https://www.ica.gov.co/areas/pecuaria/servicios/regulacion-y-control-de-medicamentos-veterinarios/productos-veterinarios-registrados.aspx
