@@ -5,7 +5,5 @@ account: hacamal
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4427423
-bundleId: 4882779
+bundleId:
 url: https://hacamal.shinyapps.io/costos-produccion/
-when: 1627974949.44148
-lastSyncTime: 1627974949.44148

@@ -1,0 +1,9 @@
+library(rsconnect)
+rsconnect::deployApp("C:/Users/hac809/Desktop/FAO/costos-produccion")
+
+https://hacamal.shinyapps.io/costos-produccion/
+
+https://www.dane.gov.co/index.php/estadisticas-por-tema/agropecuario/sistema-de-informacion-de-precios-sipsa/componente-insumos-1/componente-insumos-historicos
+
+install.packages("devtools")
+devtools::install_github("nebulae-co/colmaps")
