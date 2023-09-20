@@ -1,5 +1,5 @@
 library(ggplot2)
-#library(shiny)
+library(shiny)
 library(shinythemes)
 library(shinyWidgets)
 library(colmaps)
